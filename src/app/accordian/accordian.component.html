@@ -1,0 +1,267 @@
+<!---Using DropDown-->
+<!-- <div class="card">
+    <div class="card-body">
+        @for(stage of qcStatus; track stage; let index = $index) {
+        <div class="mb-0 card-body">
+            <label class="col-3">Process {{index + 1}}</label>
+            <div class="col-12">
+                <ng-select [items]="qcStatus" bindLabel="name" [clearable]="false" (change)="selectStage($event, index)"
+                    [ngClass]="{'disabled-select': isDisabled[index]}" >
+                </ng-select>
+                @if(process[index]?.stage == 'Stage 1' || process[index]?.stage == 'Stage 2') {
+                <div class="mb-0 card-body">
+                    <label class="col-3">{{process[index]?.stage}}</label>
+                    <div class="col-12">
+                        <ng-select [items]="process[index]?.status" bindLabel="process" [clearable]="false"
+                        (change)="selectProcess($event, index)"  ></ng-select>
+                        @if(variant[index]?.process == 'Rejected'){
+                            <div class="card-body p-2 mb-2">
+                                <form [formGroup]="qcForm">
+                                    <div formArrayName="reject">
+                                        <div [formGroupName]="index">
+                                            <div class="mb-0 error-inputbox">
+                                                <label class="col-3 col-form-label">Status<span class="text-danger">*</span></label>
+                                                <div class="col-12">
+                                                    <ng-select [items]="datas" bindLabel="name" bindValue="name"
+                                                        placeholder="Select Status" [clearable]="false"
+                                                        formControlName="status"></ng-select>
+                                                    @if(optionsForm.value[index].stage == 'Rejected' &&
+                                                    optionsForm.value[index].status == null && submitted){
+                                                    <p class="text-danger">Status Is required</p>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="mb-0 error-inputbox">
+                                                <label class="col-3 col-form-label">Reject Reason<span
+                                                        class="text-danger">*</span></label>
+                                                <div class="col-12">
+                                                    <ng-select [items]="datas" bindLabel="name" bindValue="name"
+                                                        placeholder="Select Reject Reason" [clearable]="false"
+                                                        formControlName="rejectReason"></ng-select>
+                                                    @if(optionsForm.value[index].stage == 'Rejected' &&
+                                                    optionsForm.value[index].rejectReason == null && submitted){
+                                                    <p class="text-danger">Reject Reason Is required</p>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="mb-0 error-inputbox">
+                                                <label class="col-3 col-form-label">Further Process<span
+                                                        class="text-danger">*</span></label>
+                                                <div class="col-12">
+                                                    <ng-select [items]="datas" bindLabel="name" bindValue="name"
+                                                        placeholder="Select Process" [clearable]="false"
+                                                        formControlName="furtherProcess"></ng-select>
+                                                    @if(optionsForm.value[index].stage == 'Rejected' &&
+                                                    optionsForm.value[index].furtherProcess == null && submitted){
+                                                    <p class="text-danger">Further Process Is required</p>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="mb-0 error-inputbox">
+                                                <label class="col-3 col-form-label">Comments</label>
+                                                <div class="col-12">
+                                                    <textarea class="form-control" placeholder="Enter Comments"
+                                                        formControlName="comments"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            }
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+        }
+    </div>
+    <div class="card-footer text-center">
+        <button class="btn btn-secondary">Cancel</button>
+        <button class="btn btn-primary ms-2" (click)="save()" [disabled]="optionsForm.value.length != 2">Save</button>
+    </div>
+</div> -->
+
+
+<!---Using Accordian-->
+<!-- <div ngbAccordion [closeOthers]="true">
+	@for (item of qcStatus; track item; let index = $index) {
+		<div ngbAccordionItem >
+			<h2 ngbAccordionHeader>
+				<button ngbAccordionButton>Process {{ index+1 }}</button>
+			</h2>
+			<div ngbAccordionCollapse>
+				<div ngbAccordionBody>
+					<ng-template>
+						@for(stage of qcStatus; track stage) {
+                            @if(stage.name == 'Stage 2' && index == 0) {
+                            <button [disabled]="true" [hidden]="process[index]?.stage == 'Stage 1' || process[index]?.stage == 'Stage 2'" class="accordion-button" (click)="selectStage(stage, index)" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                {{stage.name}}
+                            </button>
+                        } @else if(index == 1 && stage.name == 'Stage 1'){
+                            <button [disabled]="true" [hidden]="process[index]?.stage == 'Stage 1' || process[index]?.stage == 'Stage 2'" class="accordion-button" (click)="selectStage(stage, index)" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                {{stage.name}}
+                            </button>
+                        } @else{
+                            <button class="accordion-button" (click)="selectStage(stage, index)" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                {{stage.name}}
+                            </button>
+                        }
+                        } 
+                        @if(process[index]?.stage == 'Stage 1' || process[index]?.stage == 'Stage 2') {
+                            <div class="mb-0 card-body">
+                                <label class="col-3">QC Status</label>
+                                <div class="col-12">
+                                    <ng-select [items]="process[index]?.status" bindLabel="process" [clearable]="false"
+                                    (change)="selectProcess($event, index)"  ></ng-select>
+                                    @if(variant[index]?.process == 'Rejected'){
+                                        <div class="card-body p-2 mb-2">
+                                            <form [formGroup]="qcForm">
+                                                <div formArrayName="reject">
+                                                    <div [formGroupName]="index">
+                                                        <div class="mb-0 error-inputbox">
+                                                            <label class="col-3 col-form-label">Status<span class="text-danger">*</span></label>
+                                                            <div class="col-12">
+                                                                <ng-select [items]="datas" bindLabel="name" bindValue="name"
+                                                                    placeholder="Select Status" [clearable]="false"
+                                                                    formControlName="status"></ng-select>
+                                                                @if(optionsForm.value[index].stage == 'Rejected' &&
+                                                                optionsForm.value[index].status == null && submitted){
+                                                                <p class="text-danger">Status Is required</p>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        <div class="mb-0 error-inputbox">
+                                                            <label class="col-3 col-form-label">Reject Reason<span
+                                                                    class="text-danger">*</span></label>
+                                                            <div class="col-12">
+                                                                <ng-select [items]="datas" bindLabel="name" bindValue="name"
+                                                                    placeholder="Select Reject Reason" [clearable]="false"
+                                                                    formControlName="rejectReason"></ng-select>
+                                                                @if(optionsForm.value[index].stage == 'Rejected' &&
+                                                                optionsForm.value[index].rejectReason == null && submitted){
+                                                                <p class="text-danger">Reject Reason Is required</p>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        <div class="mb-0 error-inputbox">
+                                                            <label class="col-3 col-form-label">Further Process<span
+                                                                    class="text-danger">*</span></label>
+                                                            <div class="col-12">
+                                                                <ng-select [items]="datas" bindLabel="name" bindValue="name"
+                                                                    placeholder="Select Process" [clearable]="false"
+                                                                    formControlName="furtherProcess"></ng-select>
+                                                                @if(optionsForm.value[index].stage == 'Rejected' &&
+                                                                optionsForm.value[index].furtherProcess == null && submitted){
+                                                                <p class="text-danger">Further Process Is required</p>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        <div class="mb-0 error-inputbox">
+                                                            <label class="col-3 col-form-label">Comments</label>
+                                                            <div class="col-12">
+                                                                <textarea class="form-control" placeholder="Enter Comments"
+                                                                    formControlName="comments"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        }
+                                </div>
+                            </div>
+                            <div class="mb-0">
+                                <label class="col-3">Comments</label>
+                                <div class="col-12">
+                                    <textarea class="form-control" placeholder="Enter Comments"></textarea>
+                                </div>
+                            </div>
+                            }
+					</ng-template>
+				</div>
+			</div>
+		</div>
+	}
+    <div class="card-footer text-center mt-2">
+        <button class="btn btn-secondary">Cancel</button>
+        <button class="btn btn-primary ms-2" (click)="save()" [disabled]="optionsForm.value.length != 2">Save</button>
+    </div>
+</div> -->
+
+
+
+<!---Using Angular Material-->
+<div class="container-fluid pt-3">
+<form [formGroup]="qcForm">
+    <div formArrayName="qcs" *ngFor="let qc of getQcs().controls; let qcIndex = index">
+        <div [formGroupName]="qcIndex">
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{ qc.get('name').value }}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+  
+          <div formArrayName="stages" *ngFor="let stage of getStages(qcIndex).controls; let stageIndex = index">
+            <mat-expansion-panel [disabled]="stage.disabled">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Stage {{ stageIndex + 1 }}
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+  
+              <div [formGroupName]="stageIndex">
+                <mat-form-field>
+                  <mat-label>QC Status</mat-label>
+                  <mat-select formControlName="status">
+                    <mat-option value="accepted">Accepted</mat-option>
+                    <mat-option value="rejected">Rejected</mat-option>
+                  </mat-select>
+                </mat-form-field>
+  
+                <mat-form-field *ngIf="stage.get('status').value === 'rejected'">
+                  <mat-label>Action</mat-label>
+                  <mat-select formControlName="action">
+                    <mat-option value="resend">Resend</mat-option>
+                    <mat-option value="scrap">Scrap</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field *ngIf="stage.get('status').value === 'rejected'">
+                    <mat-label>Status</mat-label>
+                    <mat-select formControlName="action">
+                      <mat-option value="resend">Resend</mat-option>
+                      <mat-option value="scrap">Scrap</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                  <mat-form-field *ngIf="stage.get('status').value === 'rejected'">
+                    <mat-label>Reject Reason</mat-label>
+                    <mat-select formControlName="action">
+                      <mat-option value="resend">Resend</mat-option>
+                      <mat-option value="scrap">Scrap</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+  
+                <mat-form-field>
+                  <mat-label>Comments</mat-label>
+                  <input matInput formControlName="comments" class="form-control">
+                </mat-form-field>
+              </div>
+            </mat-expansion-panel>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+      </div>
+    </div>
+  </form>
+
+  <div class="card-footer text-center mt-2">
+    <button class="btn btn-secondary">Cancel</button>
+    <button class="btn btn-primary ms-2" (click)="save()" [disabled]="!this.qcForm.valid">Save</button>
+</div>
+</div>
+
+  
